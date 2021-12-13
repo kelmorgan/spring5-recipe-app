@@ -25,7 +25,6 @@ public class Recipe {
 
     public Long getId() {
         return id;
-
     }
 
     public void setId(Long id) {
