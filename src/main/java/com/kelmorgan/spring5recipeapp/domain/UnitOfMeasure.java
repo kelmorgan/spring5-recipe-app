@@ -2,6 +2,7 @@ package com.kelmorgan.spring5recipeapp.domain;
 
 import javax.persistence.*;
 
+
 @Entity
 public class UnitOfMeasure {
     @Id
