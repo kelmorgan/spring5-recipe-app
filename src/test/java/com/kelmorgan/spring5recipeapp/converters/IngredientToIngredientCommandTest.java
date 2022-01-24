@@ -51,13 +51,12 @@ class IngredientToIngredientCommandTest {
         //then
         assertNull(ingredientCommand.getUom());
         assertEquals(ID_VALUE, ingredientCommand.getId());
-        // assertEquals(RECIPE, ingredientCommand.get);
         assertEquals(AMOUNT, ingredientCommand.getAmount());
         assertEquals(DESCRIPTION, ingredientCommand.getDescription());
     }
 
     @Test
-    public void testConvertWithUom() throws Exception {
+    public void testConvertWithUom() {
         //given
         Ingredient ingredient = new Ingredient();
         ingredient.setId(ID_VALUE);
