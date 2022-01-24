@@ -1,6 +1,7 @@
 package com.kelmorgan.spring5recipeapp.controllers;
 
 import com.kelmorgan.spring5recipeapp.commands.RecipeCommand;
+import com.kelmorgan.spring5recipeapp.services.IngredientService;
 import com.kelmorgan.spring5recipeapp.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,13 +22,16 @@ class IngredientControllerTest {
 
     IngredientController controller;
 
+    @Mock
+    IngredientService ingredientService;
+
     MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        controller = new IngredientController( recipeService);
+        controller = new IngredientController( recipeService, ingredientService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
