@@ -1,10 +1,13 @@
 package com.kelmorgan.spring5recipeapp.services;
 
 
+import com.kelmorgan.spring5recipeapp.commands.RecipeCommand;
 import com.kelmorgan.spring5recipeapp.converters.RecipeCommandToRecipe;
 import com.kelmorgan.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.kelmorgan.spring5recipeapp.domain.Recipe;
+import com.kelmorgan.spring5recipeapp.exceptions.NotFoundException;
 import com.kelmorgan.spring5recipeapp.repositories.RecipeRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,6 +26,7 @@ import static org.mockito.Mockito.*;
  */
 public class RecipeServiceImplTest {
 
+
     RecipeServiceImpl recipeService;
 
     @Mock
@@ -33,7 +37,6 @@ public class RecipeServiceImplTest {
 
     @Mock
     RecipeCommandToRecipe recipeCommandToRecipe;
-
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -58,6 +61,43 @@ public class RecipeServiceImplTest {
     }
 
     @Test
+    public void getRecipeByIdTestNotFound() throws Exception {
+
+        NotFoundException thrown = Assertions.assertThrows(NotFoundException.class, () -> {
+            Optional<Recipe> recipeOptional = Optional.empty();
+
+            when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+            Recipe recipeReturned = recipeService.findById(1L);
+            //Code under test
+        });
+
+        Assertions.assertEquals("Recipe Not Found", thrown.getMessage());
+
+        //should go boom
+    }
+
+    @Test
+    public void getRecipeCommandByIdTest() throws Exception {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        RecipeCommand commandById = recipeService.findCommandById(1L);
+
+        assertNotNull("Null recipe returned", commandById);
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
     public void getRecipesTest() throws Exception {
 
         Recipe recipe = new Recipe();
@@ -71,6 +111,21 @@ public class RecipeServiceImplTest {
         assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
+    }
+
+    @Test
+    public void testDeleteById() throws Exception {
+
+        //given
+        Long idToDelete = Long.valueOf(2L);
+
+        //when
+        recipeService.deleteById(idToDelete);
+
+        //no 'when', since method has void return type
+
+        //then
+        verify(recipeRepository, times(1)).deleteById(anyLong());
     }
 
 }
