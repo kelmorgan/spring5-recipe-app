@@ -61,7 +61,7 @@ public class RecipeServiceImplTest {
     }
 
     @Test
-    public void getRecipeByIdTestNotFound() throws Exception {
+    public void getRecipeByIdTestNotFound() {
 
         NotFoundException thrown = Assertions.assertThrows(NotFoundException.class, () -> {
             Optional<Recipe> recipeOptional = Optional.empty();
@@ -72,7 +72,7 @@ public class RecipeServiceImplTest {
             //Code under test
         });
 
-        Assertions.assertEquals("Recipe Not Found", thrown.getMessage());
+        Assertions.assertEquals("Recipe Not Found. For ID value: 1", thrown.getMessage());
 
         //should go boom
     }
